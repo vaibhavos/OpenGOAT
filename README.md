@@ -6,12 +6,12 @@
   <img src="./scorecard.png" width="800" alt="OpenGOAT Scorecard">
 </p>
 
-[![Stars](https://img.shields.io/github/stars/baibhavos/opengoat?style=for-the-badge&color=00ff88&labelColor=0d0d0d)](https://github.com/baibhavos/opengoat/stargazers)
+[![Stars](https://img.shields.io/github/stars/vaibhavos/OpenGOAT?style=for-the-badge&color=00ff88&labelColor=0d0d0d)](https://github.com/vaibhavos/OpenGOAT/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-00ff88?style=for-the-badge&labelColor=0d0d0d)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-00ff88?style=for-the-badge&labelColor=0d0d0d)](https://www.typescriptlang.org/)
 [![CLI](https://img.shields.io/badge/Interface-CLI%20%2B%20TUI%20%2B%20Web-00ff88?style=for-the-badge&labelColor=0d0d0d)](#)
 [![Local First](https://img.shields.io/badge/Storage-Local%20First-00ff88?style=for-the-badge&labelColor=0d0d0d)](#)
-[![Last Commit](https://img.shields.io/github/last-commit/baibhavos/opengoat?style=for-the-badge&color=00ff88&labelColor=0d0d0d)](https://github.com/baibhavos/opengoat/commits)
+[![Last Commit](https://img.shields.io/github/last-commit/vaibhavos/OpenGOAT?style=for-the-badge&color=00ff88&labelColor=0d0d0d)](https://github.com/vaibhavos/OpenGOAT/commits)
 
 **Stop organising your goals. Start executing them.**
 
@@ -195,13 +195,13 @@ opengoat serve
 # Exposes localhost:3000/api/state/stream — your full gap log in JSON
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for setup. Issues tagged [`good first issue`](https://github.com/baibhavos/opengoat/labels/good%20first%20issue) are a good starting point. If you're building a plugin, open an issue first so we can coordinate the interface.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup. Issues tagged [`good first issue`](https://github.com/vaibhavos/OpenGOAT/labels/good%20first%20issue) are a good starting point. If you're building a plugin, open an issue first so we can coordinate the interface.
 
 ---
 
 ## Why I Built This
 
-I'm Baibhav — CS + Math, 21, publicly building a $50k challenge from India.
+I'm Vaibhav — CS + Math, 21, publicly building a $50k challenge from India.
 
 I tried every system. The problem was never the tool. The problem was that none of them could tell me if I was *actually going to make it.* They were all recording history. None were predicting the future.
 
@@ -216,7 +216,7 @@ If you want to follow the build — the quantitative systems, the tools, the rea
 **Ghost Protocol Newsletter** — Systematic execution, quant-adjacent tooling, and building in public. Free.
 → [Subscribe here](https://your-ghost-protocol-link.com)
 
-**X/Twitter:** [@baibhavos](https://x.com/baibhavos) — live updates on the build
+**X/Twitter:** [@VaibhavOS](https://x.com/VaibhavOS) — live updates on the build
 
 **GitHub:** You're here. Star the repo if OpenGOAT belongs in your stack.
 
@@ -230,6 +230,6 @@ MIT — use it, fork it, build on it. If you ship something on top of OpenGOAT, 
 
 <div align="center">
 
-*Built by [@baibhavos](https://github.com/baibhavos) · Part of the $50k public challenge · Ghost Protocol*
+*Built by [@VaibhavOS](https://github.com/VaibhavOS) · Part of the $50k public challenge · Ghost Protocol*
 
 </div>
