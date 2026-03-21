@@ -214,7 +214,7 @@ If you want to follow the build — the quantitative systems, the tools, the rea
 ## Connect
 
 **Ghost Protocol Newsletter** — Systematic execution, quant-adjacent tooling, and building in public. Free.
-→ [Subscribe here](https://your-ghost-protocol-link.com)
+→ [Subscribe here](https://ghost-protocol.beehiiv.com/)
 
 **X/Twitter:** [@VaibhavOS](https://x.com/VaibhavOS) — live updates on the build
 
