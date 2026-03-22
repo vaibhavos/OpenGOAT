@@ -1,21 +1,17 @@
 {
   "name": "opengoat",
   "version": "1.0.0",
-  "description": "Stop organizing your goals. Start crushing them. Gap = Goal − Current.",
+  "description": "Stop organizing your goals. Start crushing them. Gap = Goal - Current.",
   "type": "module",
   "bin": {
     "opengoat": "./dist/index.js"
   },
   "main": "./dist/index.js",
-  "types": "./dist/types/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "types": "./dist/types/index.d.ts"
-    },
-    "./types": {
-      "import": "./dist/types/index.js",
-      "types": "./dist/types/index.d.ts"
+      "types": "./dist/index.d.ts"
     }
   },
   "workspaces": [
@@ -42,17 +38,17 @@
     "cors": "^2.8.6",
     "express": "^4.19.2",
     "groq-sdk": "^1.1.1",
+    "ink": "^4.4.1",
+    "inquirer": "^9.3.2",
     "open": "^11.0.0",
     "openai": "^6.32.0",
+    "react": "^18.3.1",
     "uuid": "^13.0.0",
     "zod": "^3.25.76"
   },
   "optionalDependencies": {
     "chokidar": "^3.6.0",
     "cli-cursor": "^5.0.0",
-    "ink": "^4.4.1",
-    "inquirer": "^9.3.2",
-    "react": "^18.3.1",
     "terminal-size": "^4.0.0"
   },
   "devDependencies": {

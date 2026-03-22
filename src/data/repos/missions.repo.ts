@@ -17,7 +17,7 @@ export class MissionsRepo {
       goalId: r.goal_id,
       xp: r.xp,
       difficulty: r.difficulty,
-      createdAt: new Date(r.created_at)
+      createdAt: new Date(r.created_at + 'Z')
     }));
   }
 
@@ -35,6 +35,34 @@ export class MissionsRepo {
     return id;
   }
 
+  static createMany(missions: Mission[]): void {
+    const db = getDB();
+    const insert = db.prepare(`
+      INSERT OR REPLACE INTO missions (
+        id, title, description, estimated_hours, status, week, path_id, goal_id, xp, difficulty, created_at
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    db.transaction(() => {
+      for (const mission of missions) {
+        insert.run(
+          mission.id,
+          mission.title,
+          mission.description,
+          mission.estimatedHours,
+          mission.status,
+          mission.week,
+          mission.pathId,
+          mission.goalId,
+          mission.xp,
+          mission.difficulty,
+          mission.createdAt.toISOString()
+        );
+      }
+    })();
+  }
+
   static getAllByGoal(goalId: string): Mission[] {
     const db = getDB();
     const rows = db.prepare('SELECT * FROM missions WHERE goal_id = ? ORDER BY week DESC').all(goalId) as any[];
@@ -49,12 +77,25 @@ export class MissionsRepo {
       goalId: r.goal_id,
       xp: r.xp,
       difficulty: r.difficulty,
-      createdAt: new Date(r.created_at)
+      createdAt: new Date(r.created_at + 'Z')
     }));
   }
 
   static markComplete(id: string): void {
     const db = getDB();
-    db.prepare(`UPDATE missions SET status = 'complete' WHERE id = ?`).run(id);
+    db.prepare(`
+      UPDATE missions
+      SET status = 'complete', completed_at = datetime('now')
+      WHERE id = ?
+    `).run(id);
+  }
+
+  static markMissed(id: string): void {
+    const db = getDB();
+    db.prepare(`
+      UPDATE missions
+      SET status = 'missed'
+      WHERE id = ?
+    `).run(id);
   }
 }

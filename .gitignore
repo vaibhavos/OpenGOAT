@@ -93,6 +93,8 @@ Thumbs.db
 # Project-Specific Artifacts
 opengoat.db
 *.db
+*.db-shm
+*.db-wal
 *.tmp
 lint_errors.tmp
 ts_errors.tmp

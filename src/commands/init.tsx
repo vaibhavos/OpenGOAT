@@ -20,13 +20,17 @@ export async function init() {
     { type: 'list', name: 'provider', message: 'Select Intelligence layer:', choices: ['Anthropic', 'OpenAI', 'Groq', 'Ollama (Local)'] }
   ]);
 
-  if (baseAnswers.provider !== 'Ollama (Local)') {
+  const providerKey = baseAnswers.provider === 'Ollama (Local)'
+    ? 'ollama'
+    : baseAnswers.provider.toLowerCase();
+
+  if (providerKey !== 'ollama') {
     const { apiKey } = await inquirer.prompt([{
       type: 'password', name: 'apiKey', message: `Enter your ${baseAnswers.provider} API Key:`
     }]);
-    SecretStore.set('opengoat', baseAnswers.provider.toLowerCase(), apiKey);
+    SecretStore.set('opengoat', providerKey, apiKey);
   }
-  await storage.set('preferred_provider', baseAnswers.provider);
+  await storage.set('preferred_provider', providerKey);
 
   // 2. Resource Mapping (5 Dimensions)
   console.log('\n--- GoatBrain 5D Resource Mapping ---');
@@ -88,7 +92,7 @@ const InitProcessUI = ({ base, resources }: { base: any, resources: any }) => {
         
         setStatus('COMPLETE');
         setPaths(parsedPaths);
-        storage.set('active_goal_id', goalId);
+        await storage.set('active_goal_id', goalId);
         
       } catch (e: any) {
         setStatus(`FAILED: ${e.message}`);

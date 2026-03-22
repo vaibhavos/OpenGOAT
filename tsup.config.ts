@@ -9,6 +9,5 @@ export default defineConfig({
   sourcemap: true,
   external: [
     'ink', 'react', 'inquirer', 'cli-cursor', 'terminal-size', 'chokidar', 'react-devtools-core'
-  ],
-  onSuccess: 'node dist/index.js --help'
+  ]
 });

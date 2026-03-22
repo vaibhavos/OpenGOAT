@@ -3,9 +3,15 @@ import { GapsRepo } from '../data/repos/gaps.repo.js';
 import { storage } from '../lib/storage.js';
 import { GapWatcher } from '../brain/gap-watcher.js';
 import { InterventionsRepo } from '../data/repos/interventions.repo.js';
+import { calculateProgress } from '../lib/progress.js';
 import chalk from 'chalk';
 
 export async function logNumber(value: number) {
+  if (!Number.isFinite(value)) {
+    console.log(chalk.red('Invalid number. Example: `opengoat log 1250`'));
+    return;
+  }
+
   const goalId = await storage.get<string>('active_goal_id');
   if (!goalId) {
     console.log(chalk.red('No active goal. Run `opengoat init` first.'));
@@ -13,7 +19,10 @@ export async function logNumber(value: number) {
   }
 
   const goal = GoalsRepo.getById(goalId);
-  if (!goal) return;
+  if (!goal) {
+    console.log(chalk.red('Active goal not found in the local database.'));
+    return;
+  }
 
   // 1. Log the new number natively via GapsRepo
   GapsRepo.log(goalId, value);
@@ -21,55 +30,24 @@ export async function logNumber(value: number) {
 
   // 2. Retrieve history and calculate velocity
   const history = GapsRepo.getSeries(goalId);
-  
-  const gapRemaining = goal.targetVal - value;
-  const closedPercent = ((value / goal.targetVal) * 100).toFixed(1);
-  
-  // REAL velocity: entries from the last 7 calendar days (not just last 7 records)
   const now = Date.now();
-  const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000;
-  const recentHistory = history.filter(h => h.loggedAt.getTime() > sevenDaysAgo);
-  let velocity7d = 0;
-  let velocityLabel = '0 (not enough data)';
-  if (recentHistory.length >= 2) {
-    const oldest = recentHistory[0];
-    const daysDiff = Math.max(1, (now - oldest.loggedAt.getTime()) / (1000 * 60 * 60 * 24));
-    velocity7d = (value - oldest.value) / daysDiff * 7;
-    velocityLabel = `${velocity7d.toFixed(1)}/week (7-day average)`;
-  } else if (history.length >= 2) {
-    const oldest = history[0];
-    const daysDiff = Math.max(1, (now - oldest.loggedAt.getTime()) / (1000 * 60 * 60 * 24));
-    velocity7d = (value - oldest.value) / daysDiff * 7;
-    velocityLabel = `${velocity7d.toFixed(1)}/week (all-time avg)`;
-  }
+  const progress = calculateProgress(goal, history, value, now);
 
-  // Target velocity based on weeks remaining
-  const msRemaining = new Date(goal.deadline).getTime() - now;
-  const weeksRemaining = Math.max(1, msRemaining / (1000 * 60 * 60 * 24 * 7));
-  const targetVelocity = gapRemaining / weeksRemaining;
-  
-  // Projected completion date
-  const weeklyVelocity = velocity7d;
-  const projectedWeeks = weeklyVelocity > 0 ? gapRemaining / weeklyVelocity : Infinity;
-  const projectedDate = weeklyVelocity > 0
-    ? new Date(now + projectedWeeks * 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-    : 'No projection (log more data)';
-
-  console.log(`\nGap updated → ${value} ${goal.unit}`);
-  console.log(`Gap remaining: ${gapRemaining} ${goal.unit}`);
-  console.log(`Closed: ${closedPercent}%`);
-  console.log(`Velocity: ${velocityLabel} (need ${Math.round(targetVelocity)}/week)`);
-  console.log(`Projected completion: ${projectedDate}`);
+  console.log(`\nGap updated -> ${value} ${goal.unit}`);
+  console.log(`Gap remaining: ${progress.gapRemaining} ${goal.unit}`);
+  console.log(`Closed: ${progress.closedPercent}%`);
+  console.log(`Velocity: ${progress.velocityLabel} (need ${Math.round(progress.targetVelocity)}/week)`);
+  console.log(`Projected completion: ${progress.projectedDate}`);
 
   const mockStatus = {
     current: value, target: goal.targetVal, unit: goal.unit,
-    percentClosed: Number(closedPercent), gap: gapRemaining,
-    velocity7d, velocity30d: velocity7d * 4, targetVelocity,
-    projectedWeeks: velocity7d > 0 ? (gapRemaining / velocity7d) : 999,
-    status: (velocity7d >= targetVelocity) ? 'on-track' : 'behind' as any,
+    percentClosed: progress.closedPercent, gap: progress.gapRemaining,
+    velocity7d: progress.velocity7d, velocity30d: progress.velocity7d * 4, targetVelocity: progress.targetVelocity,
+    projectedWeeks: progress.velocity7d > 0 ? (progress.gapRemaining / progress.velocity7d) : 999,
+    status: (progress.velocity7d >= progress.targetVelocity) ? 'on-track' : 'behind' as any,
     daysSinceMovement: history.length > 1 ? (now - history[history.length - 2].loggedAt.getTime()) / 86400000 : 0,
-    projectedCompletionDate: projectedDate,
-    isBehindSchedule: velocity7d < targetVelocity
+    projectedCompletionDate: progress.projectedDate,
+    isBehindSchedule: progress.velocity7d < progress.targetVelocity
   };
 
   // 3. GoatBrain Watcher Evaluation

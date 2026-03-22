@@ -189,7 +189,7 @@ const HUD = () => {
 
   const handleChat = async (text: string) => {
     try {
-      const provider = await getProviderInstance(await storage.get<string>('ai_provider') || 'groq');
+      const provider = await getProviderInstance(await storage.get<string>('preferred_provider') || 'groq');
       const systemPrompt = `You are GoatBrain OS. You live in a terminal. Keep answers extremely short, 1-2 sentences. Goal context: ${state.goal}`;
       const response = await invokeModel(provider, `${systemPrompt}\n\nUser: ${text}`);
       addLog('ai', response);

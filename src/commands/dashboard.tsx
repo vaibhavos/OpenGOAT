@@ -6,6 +6,7 @@ import { GapsRepo } from '../data/repos/gaps.repo.js';
 import { ScoresRepo } from '../data/repos/scores.repo.js';
 import { storage } from '../lib/storage.js';
 import { GapMeter } from '../../packages/ink-ui/src/index.js';
+import { calculateProgress } from '../lib/progress.js';
 import chalk from 'chalk';
 
 export async function liveDashboard() {
@@ -25,8 +26,7 @@ export async function liveDashboard() {
 }
 
 const DashboardUI = ({ goal, path, scores, history }: any) => {
-  const closedPercent = Math.round((goal.currentVal / goal.targetVal) * 100);
-  const remaining = goal.targetVal - goal.currentVal;
+  const progress = calculateProgress(goal, history);
   const rank = scores.length > 0 ? scores[0].rank : 'UNRANKED';
   const totalXp = scores.reduce((sum: number, s: any) => sum + s.xp, 0);
 
@@ -39,8 +39,10 @@ const DashboardUI = ({ goal, path, scores, history }: any) => {
       </Box>
 
       <Text dimColor>Goal: {goal.statement}</Text>
-      <Text dimColor>Deadline: {goal.deadline} ({closedPercent}% Closed)</Text>
-      <Text dimColor>Remaining: {remaining} {goal.unit}</Text>
+      <Text dimColor>Deadline: {goal.deadline} ({Math.round(progress.closedPercent)}% Closed)</Text>
+      <Text dimColor>Remaining: {progress.gapRemaining} {goal.unit}</Text>
+      <Text dimColor>Velocity: {progress.velocityLabel}</Text>
+      <Text dimColor>Projected completion: {progress.projectedDate}</Text>
 
       <Box flexDirection="column" marginTop={1} padding={1} borderStyle="round" borderColor="yellow">
         <Text bold color="yellow">ACTIVE STRATEGY</Text>

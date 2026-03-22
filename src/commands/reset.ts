@@ -8,6 +8,7 @@ export async function resetData() {
   db.transaction(() => {
     db.prepare('DELETE FROM gap_log').run();
     db.prepare('DELETE FROM interventions').run();
+    db.prepare('DELETE FROM missions').run();
     db.prepare('DELETE FROM week_scores').run();
     db.prepare('DELETE FROM paths').run();
     db.prepare('DELETE FROM resource_profiles').run();

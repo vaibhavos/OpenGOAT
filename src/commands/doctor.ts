@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import Database from 'better-sqlite3';
 import { SecretStore } from '../lib/secret-store.js';
 import { getProviderInstance } from '../lib/ai-provider.js';
+import { getDatabasePath } from '../data/db.js';
 
 export const doctorCommand = new Command('doctor')
   .description('Run diagnostic health checks on the OpenGOAT system')
@@ -42,15 +43,15 @@ export const doctorCommand = new Command('doctor')
 
     // 2. Check Database
     try {
-      const dbPath = path.join(openGoatDir, 'goals.db');
+      const dbPath = getDatabasePath();
       if (fs.existsSync(dbPath)) {
         // Just verify we can instantiate it without throwing
         const sqlite = new Database(dbPath, { fileMustExist: true });
         const goalCount = sqlite.prepare('SELECT COUNT(*) as count FROM goals').get() as { count: number };
-        check('Database', 'OK', `Connected to goals.db. Found ${goalCount.count} goals.`);
+        check('Database', 'OK', `Connected to ${path.basename(dbPath)}. Found ${goalCount.count} goals.`);
         sqlite.close();
       } else {
-        check('Database', 'WARN', `goals.db does not exist yet. Run 'opengoat init'.`);
+        check('Database', 'WARN', `${path.basename(dbPath)} does not exist yet. Run 'opengoat init'.`);
       }
     } catch (e: any) {
       check('Database', 'FAIL', `Database connection failed: ${e.message}`);
