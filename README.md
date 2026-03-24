@@ -1,8 +1,4 @@
-diff --git a/c:\Users\modif\Desktop\OpenGOAT\README.md b/c:\Users\modif\Desktop\OpenGOAT\README.md
-deleted file mode 100644
---- a/c:\Users\modif\Desktop\OpenGOAT\README.md
-+++ /dev/null
-@@ -1,235 +0,0 @@
+
 -# OpenGOAT — A Terminal Brain That Tells You If You're Actually Going to Hit Your Goal
 -
 -<div align="center">
